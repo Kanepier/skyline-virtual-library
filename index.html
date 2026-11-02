@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trợ lý Thư viện ảo Sky-Line</title>
+<style>
+:root{
+  --navy:#203a70; --blue:#4267d5; --sky:#eaf3ff; --purple:#7964d9;
+  --pink:#ff8eae; --yellow:#ffd76b; --green:#35a987; --ink:#24314d;
+  --muted:#72809a; --paper:#ffffff; --line:#e6ebf4; --shadow:0 12px 30px rgba(37,61,111,.09);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:#f5f8fe}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.topbar{background:linear-gradient(110deg,#233b78,#4b66d2);color:#fff;padding:17px 4.5%;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:45px;height:45px;border-radius:15px;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:25px;box-shadow:0 5px 14px #172d6944}
+.brand h1{font-size:18px;margin:0 0 3px;font-weight:800;letter-spacing:.2px}
+.brand p{margin:0;font-size:12px;color:#dbe5ff}
+.top-right{display:flex;align-items:center;gap:10px}
+.student-pill{background:#ffffff20;border:1px solid #ffffff35;border-radius:999px;padding:9px 13px;font-size:13px}
+.top-btn{background:#fff;color:var(--navy);border:0;border-radius:10px;padding:10px 13px;font-weight:700}
+.hero{padding:27px 4.5% 22px;background:linear-gradient(110deg,#e8f2ff,#f4efff 70%,#fff0f5);display:flex;align-items:center;justify-content:space-between;gap:22px}
+.hero-copy{max-width:690px}
+.eyebrow{color:#5c65bb;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;font-size:11px}
+.hero h2{font-size:clamp(25px,3vw,39px);line-height:1.12;margin:10px 0;color:#20386f}
+.hero p{font-size:15px;line-height:1.65;color:#586783;margin:0 0 17px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.primary,.secondary{border:0;border-radius:12px;padding:12px 16px;font-weight:750}
+.primary{background:var(--blue);color:#fff;box-shadow:0 7px 15px #4267d533}
+.secondary{background:#fff;color:var(--navy);border:1px solid #dce4f4}
+.hero-art{width:205px;min-width:150px;height:170px;display:grid;place-items:center;position:relative}
+.book-stack{font-size:100px;filter:drop-shadow(0 10px 8px #3b4d7622);z-index:1}
+.spark{position:absolute;font-size:26px}.s1{top:5px;right:18px}.s2{bottom:10px;left:8px}.s3{top:20px;left:10px}
+main{max-width:1400px;margin:auto;padding:24px 4.5% 48px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:23px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;align-items:center;gap:13px;box-shadow:0 4px 15px #273d7010}
+.stat-icon{width:45px;height:45px;display:grid;place-items:center;border-radius:14px;background:#eef2ff;font-size:23px}
+.stat strong{font-size:22px;display:block;color:#263d78}.stat span{font-size:12px;color:var(--muted)}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:26px 0 14px}
+.section-heading h3{font-size:21px;margin:0;color:#263b70}.section-heading p{font-size:13px;color:var(--muted);margin:5px 0 0}
+.small-link{border:0;background:transparent;color:#4a62c5;font-weight:750}
+.grid{display:grid;grid-template-columns:1.3fr .9fr;gap:18px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.panel-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.panel-head h3{font-size:17px;margin:0}.panel-head p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.tag{font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px;background:#eef0ff;color:#5d55b8;white-space:nowrap}
+.character-list{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:16px}
+.character{border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:center;background:linear-gradient(180deg,#fff,#fafbff);transition:.2s}
+.character:hover,.character.active{border-color:#8b9df1;box-shadow:0 5px 14px #405cc51c;transform:translateY(-2px)}
+.avatar{width:68px;height:68px;border-radius:22px;margin:0 auto 10px;display:grid;place-items:center;font-size:38px;background:#e9f1ff}
+.character:nth-child(2) .avatar{background:#fff0d8}.character:nth-child(3) .avatar{background:#f5eaff}
+.character h4{margin:0 0 5px;font-size:14px}.character p{font-size:11px;line-height:1.45;color:var(--muted);margin:0 0 10px;min-height:32px}
+.character button{background:#edf2ff;color:#3f58b9;border:0;border-radius:9px;padding:8px 10px;font-size:12px;font-weight:750;width:100%}
+.chatbox{margin:0 16px 16px;border:1px solid #e6eafd;border-radius:14px;overflow:hidden}
+.chat-top{background:#f6f8ff;padding:12px 14px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800}
+.online{width:8px;height:8px;background:#39b78d;border-radius:50%;display:inline-block}
+.chat-messages{height:255px;overflow:auto;padding:15px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.bubble{max-width:88%;padding:10px 12px;border-radius:13px;font-size:13px;line-height:1.55}
+.bubble.bot{align-self:flex-start;background:#f0f4ff;border-bottom-left-radius:4px}
+.bubble.user{align-self:flex-end;background:#4267d5;color:#fff;border-bottom-right-radius:4px}
+.chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff}
+.chat-input input{min-width:0;flex:1;border:1px solid #dfe5f1;border-radius:10px;padding:11px 12px;outline:none}
+.chat-input input:focus{border-color:#8b9df1}.send{border:0;border-radius:10px;padding:0 15px;color:#fff;background:var(--blue);font-weight:800}
+.quick-prompts{padding:0 12px 12px;display:flex;gap:7px;flex-wrap:wrap}
+.quick-prompts button{border:1px solid #e1e7f6;background:#fff;color:#5c6790;border-radius:999px;padding:7px 9px;font-size:11px}
+.challenge-body{padding:18px 20px}
+.book-select{width:100%;padding:11px 12px;border:1px solid #dfe5f1;border-radius:11px;background:#fff;color:var(--ink);margin:8px 0 14px}
+.question{font-size:14px;font-weight:750;line-height:1.5;margin:0 0 12px}
+.answers{display:grid;gap:8px}
+.answer{border:1px solid #e1e7f2;background:#fff;text-align:left;border-radius:11px;padding:11px 12px;color:#4c5975;font-size:13px;line-height:1.45}
+.answer:hover{border-color:#8da0ed;background:#f8f9ff}.answer.correct{border-color:#41b88f;background:#edfff7;color:#147b5a}.answer.wrong{border-color:#f09aa9;background:#fff1f3;color:#b43b54}
+.feedback{font-size:13px;line-height:1.5;margin:12px 0 0;padding:11px;border-radius:10px;display:none}
+.feedback.show{display:block;background:#f1fbf7;color:#26785f}
+.challenge-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:15px}
+.progress{font-size:12px;color:var(--muted)}.next-btn{background:#243f83;color:#fff;border:0;border-radius:10px;padding:10px 13px;font-size:12px;font-weight:800}
+.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.leaderboard{padding:6px 18px 16px}
+.rank-row{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #eef1f7}
+.rank-row:last-child{border:0}.rank{font-size:16px;text-align:center}.student{display:flex;align-items:center;gap:10px}.student-avatar{width:34px;height:34px;border-radius:12px;background:#eef2ff;display:grid;place-items:center}.student b{font-size:13px;display:block}.student small{font-size:11px;color:var(--muted)}
+.points{font-size:13px;font-weight:850;color:#3f58b9}
+.reflection{padding:18px 20px}.reflection p{font-size:13px;line-height:1.55;color:var(--muted);margin:0 0 12px}
+.reflection textarea{width:100%;height:92px;resize:vertical;border:1px solid #dfe5f1;border-radius:12px;padding:12px;outline:none}
+.reflection-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}.reflection-actions small{color:var(--muted);font-size:11px}
+.footer{text-align:center;padding:20px;color:#8791a8;font-size:12px}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#15264e88;z-index:10;align-items:center;justify-content:center;padding:20px}
+.modal-backdrop.show{display:flex}.modal{max-width:440px;width:100%;background:#fff;border-radius:18px;padding:24px;box-shadow:0 20px 60px #14254b44}
+.modal h3{margin:0 0 8px;color:#243d7a}.modal p{font-size:13px;color:var(--muted);line-height:1.6}.modal input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin:8px 0 15px}
+.toast{position:fixed;right:20px;bottom:20px;background:#203a70;color:#fff;padding:13px 17px;border-radius:12px;box-shadow:var(--shadow);font-size:13px;display:none;z-index:20}.toast.show{display:block;animation:fade 2.8s forwards}
+@keyframes fade{0%,75%{opacity:1}100%{opacity:0}}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.hero-art{width:140px}.lower-grid{grid-template-columns:1fr}}
+@media(max-width:560px){ .reflection form > div:first-child{grid-template-columns:1fr !important;}.topbar{padding:14px 4%;align-items:flex-start}.brand h1{font-size:15px}.student-pill{display:none}.hero{padding:24px 5%}.hero-art{display:none}main{padding:18px 4% 30px}.stats{gap:9px}.stat{padding:12px;gap:8px}.stat-icon{width:36px;height:36px;font-size:19px}.stat strong{font-size:18px}.character-list{grid-template-columns:1fr}.character{display:grid;grid-template-columns:56px 1fr;gap:10px;text-align:left;align-items:center}.avatar{width:52px;height:52px;border-radius:16px;grid-row:span 2;margin:0;font-size:30px}.character h4{align-self:end}.character p{min-height:0;margin:0}.character button{grid-column:2}.section-heading h3{font-size:18px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">📚</div>
+    <div><h1>SKY-LINE VIRTUAL LIBRARY</h1><p>Trợ lý Thư viện ảo · Open a Book, Open Your Mind!</p></div>
+  </div>
+  <div class="top-right"><span class="student-pill">✨ Góc đọc sách của em</span><button class="top-btn" id="profileBtn">👤 Đổi tên</button></div>
+</header>
+
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">Chào mừng nhà khám phá tri thức!</div>
+    <h2>Mỗi cuốn sách mở ra<br>một thế giới kỳ diệu.</h2>
+    <p>Gặp gỡ nhân vật em yêu thích, thử thách khả năng đọc hiểu và cùng cộng đồng Sky-Line lan tỏa tình yêu sách.</p>
+    <div class="hero-actions"><button class="primary" onclick="document.getElementById('characters').scrollIntoView({behavior:'smooth'})">💬 Gặp nhân vật ngay</button><button class="secondary" onclick="document.getElementById('challenge').scrollIntoView({behavior:'smooth'})">🎯 Thử thách đọc sách</button></div>
+  </div>
+  <div class="hero-art" aria-hidden="true"><span class="spark s1">✨</span><span class="spark s2">🌟</span><span class="spark s3">💫</span><div class="book-stack">📚</div></div>
+</section>
+
+<main>
+  <section class="stats">
+    <div class="stat"><div class="stat-icon">⭐</div><div><strong id="pointsStat">120</strong><span>Điểm đọc sách</span></div></div>
+    <div class="stat"><div class="stat-icon">🏅</div><div><strong id="badgeStat">2</strong><span>Huy hiệu của em</span></div></div>
+    <div class="stat"><div class="stat-icon">📖</div><div><strong id="challengeStat">3</strong><span>Thử thách đã làm</span></div></div>
+    <div class="stat"><div class="stat-icon">🔥</div><div><strong>4 ngày</strong><span>Chuỗi ngày đọc sách</span></div></div>
+  </section>
+
+  <div class="section-heading" id="characters"><div><h3>💬 Chat với nhân vật văn học</h3><p>Chọn một người bạn trong trang sách và bắt đầu trò chuyện.</p></div><button class="small-link" id="resetChat">Làm mới cuộc trò chuyện ↻</button></div>
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head"><div><h3>Nhân vật đang chờ em</h3><p>Chọn nhân vật để bắt đầu</p></div><span class="tag">ROLEPLAY AI · BẢN MẪU</span></div>
+      <div class="character-list">
+        <div class="character active" data-character="deman"><div class="avatar">🦗</div><div><h4>Dế Mèn</h4><p>Dũng cảm, đôi lúc bốc đồng, biết suy ngẫm.</p></div><button>Trò chuyện với Dế Mèn</button></div>
+        <div class="character" data-character="tam"><div class="avatar">👑</div><div><h4>Tấm</h4><p>Nhân hậu, kiên trì và giàu nghị lực.</p></div><button>Trò chuyện với Tấm</button></div>
+        <div class="character" data-character="fox"><div class="avatar">🦊</div><div><h4>Cáo</h4><p>Người bạn gợi mở về tình bạn và sự gắn bó.</p></div><button>Trò chuyện với Cáo</button></div>
+      </div>
+      <div class="chatbox">
+        <div class="chat-top"><span class="online"></span><span id="chatTitle">Dế Mèn · Người bạn văn học</span><span id="aiStatus" style="margin-left:auto;color:#7b87a0;font-size:11px">● Chế độ bản mẫu</span></div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite">
+          <div class="bubble bot">Chào bạn! Mình là Dế Mèn. Mình đã học được rằng sự kiêu căng có thể làm tổn thương người khác. Bạn muốn cùng mình khám phá bài học về tình bạn và lòng tốt chứ?</div>
+        </div>
+        <div class="quick-prompts"><button data-prompt="Bài học lớn nhất của bạn là gì?">Bài học lớn nhất là gì?</button><button data-prompt="Bạn cảm thấy thế nào về Dế Choắt?">Kể về Dế Choắt</button><button data-prompt="Hãy đặt cho em một câu đố nhé!">Đố em một câu nhé!</button></div>
+        <form class="chat-input" id="chatForm"><input id="chatInput" placeholder="Nhập câu hỏi của em..." autocomplete="off" aria-label="Nhập câu hỏi"><button class="send" type="submit">Gửi ➤</button></form>
+      </div>
+    </section>
+
+    <section class="panel" id="challenge">
+      <div class="panel-head"><div><h3>🎯 Thử thách hiểu sách</h3><p>Đọc kỹ câu hỏi rồi chọn câu trả lời nhé!</p></div><span class="tag">+10 ĐIỂM</span></div>
+      <div class="challenge-body">
+        <label for="bookSelect" style="font-size:12px;font-weight:800;color:#5b6884">CHỌN CUỐN SÁCH</label>
+        <select class="book-select" id="bookSelect"><option value="deman">Dế Mèn phiêu lưu ký</option><option value="tam">Tấm Cám</option><option value="hoangtu">Hoàng tử bé</option></select>
+        <div class="progress" id="questionCount">Câu hỏi 1/5 · Mức độ: Cơ bản</div>
+        <p class="question" id="questionText">Bài học quan trọng Dế Mèn nhận ra sau những sai lầm của mình là gì?</p>
+        <div class="answers" id="answers"></div>
+        <div class="feedback" id="feedback" role="status"></div>
+        <div class="challenge-footer"><span class="progress" id="scoreText">Điểm bài này: 0</span><button class="next-btn" id="nextQuestion" disabled>Câu tiếp theo →</button></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="lower-grid">
+    <section class="panel">
+      <div class="panel-head"><div><h3>🏆 Bảng vàng độc giả</h3><p>Những người bạn đang lan tỏa niềm vui đọc sách</p></div><span class="tag">THÁNG NÀY</span></div>
+      <div class="leaderboard" id="leaderboard">
+        <div class="rank-row"><div class="rank">🥇</div><div class="student"><div class="student-avatar">🌻</div><div><b>Minh Anh</b><small>Lớp 5A · Nhà khám phá sách</small></div></div><div class="points">350 điểm</div></div>
+        <div class="rank-row"><div class="rank">🥈</div><div class="student"><div class="student-avatar">🚀</div><div><b>Gia Bảo</b><small>Lớp 6B · Thám tử văn học</small></div></div><div class="points">320 điểm</div></div>
+        <div class="rank-row"><div class="rank">🥉</div><div class="student"><div class="student-avatar">🌈</div><div><b>Khánh Linh</b><small>Lớp 4C · Mầm đọc sách</small></div></div><div class="points">285 điểm</div></div>
+        <div class="rank-row"><div class="rank">4</div><div class="student"><div class="student-avatar">🪐</div><div><b id="leaderName">Bạn đọc Sky-Line</b><small>Độc giả tích cực</small></div></div><div class="points" id="leaderPoints">120 điểm</div></div>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><div><h3>✍️ Góc cảm nhận sách</h3><p>Một suy nghĩ nhỏ cũng có thể truyền cảm hứng lớn.</p></div><span class="tag">CHIA SẺ</span></div>
+      <div class="reflection">
+        <p>Cuốn sách nào khiến em suy nghĩ nhiều nhất? Hãy viết vài dòng về nhân vật, chi tiết hoặc bài học em yêu thích.</p>
+        <textarea id="reflectionText" placeholder="Em muốn chia sẻ điều gì sau khi đọc sách?"></textarea>
+        <div class="reflection-actions"><small id="reflectionCount">0 ký tự</small><button class="primary" id="submitReflection">Gửi cảm nhận ✨</button></div>
+      </div>
+    </section>
+  </div>
+  <div class="section-heading"><div><h3>🌟 Nhiệm vụ thư viện tuần này</h3><p>Hoàn thành nhiệm vụ để trở thành nhà khám phá sách.</p></div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-icon">📘</div><div><strong>Đọc 15 phút</strong><span>Nhiệm vụ hôm nay</span></div></div>
+    <div class="stat"><div class="stat-icon">💭</div><div><strong>Hỏi nhân vật</strong><span>Đặt 2 câu hỏi thú vị</span></div></div>
+    <div class="stat"><div class="stat-icon">📝</div><div><strong>Viết cảm nhận</strong><span>Chia sẻ suy nghĩ của em</span></div></div>
+    <div class="stat"><div class="stat-icon">🤝</div><div><strong>Giới thiệu sách</strong><span>Gợi ý sách cho một người bạn</span></div></div>
+  </div>
+</main>
+
+  <div class="section-heading" id="book-request"><div><h3>📬 Góc đề xuất sách mới</h3><p>Cuốn sách em mong thư viện bổ sung có thể trở thành niềm vui đọc sách của nhiều bạn.</p></div><span class="tag">Ý KIẾN ĐỘC GIẢ</span></div>
+  <section class="panel">
+    <div class="reflection">
+      <p>Hãy chia sẻ tên sách em muốn đọc. Thư viện sẽ tổng hợp các đề xuất để xem xét bổ sung vào bộ sưu tập. Việc gửi đề xuất không đồng nghĩa sách chắc chắn sẽ được mua.</p>
+      <form id="bookRequestForm">
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+          <label style="font-size:12px;font-weight:750;color:#596782">Tên sách *<input id="requestedTitle" required maxlength="160" placeholder="Tên cuốn sách em mong muốn" style="display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #dfe5f1;border-radius:10px"></label>
+          <label style="font-size:12px;font-weight:750;color:#596782">Tác giả (nếu biết)<input id="requestedAuthor" maxlength="120" placeholder="Tên tác giả" style="display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #dfe5f1;border-radius:10px"></label>
+          <label style="font-size:12px;font-weight:750;color:#596782">Khối lớp
+            <select id="requestedGrade" class="book-select" style="margin-bottom:0"><option>Tiểu học</option><option>THCS</option><option>THPT</option></select>
+          </label>
+          <label style="font-size:12px;font-weight:750;color:#596782">Thể loại
+            <select id="requestedGenre" class="book-select" style="margin-bottom:0"><option>Truyện / tiểu thuyết</option><option>Khoa học</option><option>Lịch sử</option><option>Kỹ năng sống</option><option>Thơ / văn học</option><option>Tiếng Anh</option><option>Truyện tranh</option><option>Khác</option></select>
+          </label>
+        </div>
+        <label style="display:block;font-size:12px;font-weight:750;color:#596782;margin-top:13px">Vì sao em muốn thư viện có cuốn sách này?
+          <textarea id="requestedReason" maxlength="700" placeholder="Ví dụ: Em thích chủ đề khám phá vũ trụ và nghĩ các bạn cũng sẽ thích cuốn sách này." style="display:block;width:100%;height:85px;margin-top:7px;border:1px solid #dfe5f1;border-radius:12px;padding:12px;resize:vertical"></textarea>
+        </label>
+        <div class="reflection-actions"><small id="requestStatus">Có thể dùng biệt danh; không nhập thông tin riêng tư.</small><button class="primary" type="submit">Gửi đề xuất 📚</button></div>
+      </form>
+      <div style="margin-top:22px;padding-top:16px;border-top:1px solid #e8edf6">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px"><b style="font-size:14px">Đề xuất gần đây trên thiết bị này</b><button type="button" class="small-link" id="refreshRequests">Làm mới ↻</button></div>
+        <div id="bookRequestList" style="display:grid;gap:9px"><p style="font-size:12px;color:#72809a">Chưa có đề xuất nào được lưu trên thiết bị này.</p></div>
+      </div>
+    </div>
+  </section>
+
+<footer class="footer">© Sky-Line Virtual Library · Bản mẫu minh họa tương tác · Cùng nhau đọc, học hỏi và trưởng thành.</footer>
+
+<div class="modal-backdrop" id="profileModal">
+  <div class="modal"><h3>👋 Xin chào, độc giả Sky-Line!</h3><p>Em muốn được gọi bằng tên hoặc biệt danh nào? Bản mẫu lưu tên trên trình duyệt của máy tính này.</p><input id="studentNameInput" maxlength="30" placeholder="Ví dụ: Mèo Con"><button class="primary" id="saveName">Lưu tên của em</button> <button class="secondary" id="closeModal">Để sau</button></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const characters = {
+  deman: {
+    title:"Dế Mèn · Người bạn văn học",
+    greeting:"Chào bạn! Mình là Dế Mèn. Mình đã học được rằng sự kiêu căng có thể làm tổn thương người khác. Bạn muốn cùng mình khám phá bài học về tình bạn và lòng tốt chứ?",
+    replies:[
+      {keys:["bài học","sai lầm","học được"],text:"Mình hiểu rằng cần suy nghĩ trước khi hành động, biết tôn trọng người khác và dũng cảm nhận trách nhiệm khi mắc lỗi. Theo bạn, điều gì giúp một người sửa chữa sai lầm?"},
+      {keys:["dế choắt","cảm thấy","bạn"],text:"Mình rất ân hận vì đã không quan tâm đến Dế Choắt và hành động thiếu suy nghĩ của mình đã gây ra hậu quả đau lòng. Nếu được làm lại, mình sẽ cư xử tử tế và có trách nhiệm hơn."},
+      {keys:["đố","câu đố","câu hỏi"],text:"Đố bạn nhé: Nếu một người bạn mắc lỗi, điều nào tốt nhất? A. Chế giễu bạn. B. Giúp bạn nhận ra lỗi và sửa chữa. C. Kể lỗi của bạn cho mọi người. Hãy trả lời A, B hoặc C!"},
+      {keys:["tình bạn","lòng tốt"],text:"Tình bạn cần sự quan tâm, tôn trọng và lòng chân thành. Đôi khi một hành động tưởng như nhỏ cũng có thể ảnh hưởng rất lớn đến người khác."}
+    ],
+    fallback:"Câu hỏi thú vị đấy! Mình nghĩ chúng ta có thể nhìn sự việc từ nhiều góc độ. Bạn thử liên hệ câu hỏi với hành động, cảm xúc và bài học mà nhân vật trải qua nhé. Em có thể hỏi mình về tình bạn, lòng tốt hoặc những sai lầm của mình."
+  },
+  tam: {
+    title:"Tấm · Người bạn trong truyện cổ tích",
+    greeting:"Xin chào! Mình là Tấm. Câu chuyện của mình có nhiều thử thách, nhưng cũng gợi ra những suy nghĩ về lòng nhân hậu, sự kiên trì và cách con người đối xử với nhau. Bạn muốn hỏi mình điều gì?",
+    replies:[
+      {keys:["bài học","ý nghĩa"],text:"Câu chuyện khiến chúng ta suy nghĩ về lòng tốt, sự công bằng và hậu quả của những hành động gây tổn thương người khác. Em nghĩ chi tiết nào thể hiện rõ nhất điều đó?"},
+      {keys:["cảm thấy","buồn","khó khăn"],text:"Mình đã trải qua nhiều khó khăn và có lúc rất buồn. Điều giúp mình tiếp tục là niềm hy vọng. Khi gặp chuyện khó, em thường tìm sự giúp đỡ từ ai?"},
+      {keys:["đố","câu hỏi"],text:"Đố em: Khi gặp khó khăn, cách ứng xử nào tích cực nhất? A. Bỏ cuộc ngay. B. Bình tĩnh tìm cách giải quyết và tìm sự hỗ trợ khi cần. C. Đổ lỗi cho tất cả mọi người."}
+    ],
+    fallback:"Cảm ơn em đã trò chuyện với mình! Em hãy nghĩ xem nhân vật đã lựa chọn ra sao, lựa chọn ấy ảnh hưởng đến ai và câu chuyện muốn gửi gắm thông điệp gì nhé."
+  },
+  fox: {
+    title:"Cáo · Người bạn của Hoàng tử bé",
+    greeting:"Chào bạn nhỏ! Mình là Cáo. Mình tin rằng tình bạn được vun đắp bằng thời gian, sự quan tâm và trách nhiệm. Bạn có muốn trò chuyện về ý nghĩa của việc trở thành bạn bè không?",
+    replies:[
+      {keys:["bài học","tình bạn","bạn bè"],text:"Một tình bạn cần thời gian để hình thành. Khi quan tâm đến ai đó, ta cũng học cách có trách nhiệm với mối quan hệ ấy. Theo em, một người bạn tốt thường làm những điều gì?"},
+      {keys:["hoàng tử bé","bông hồng","hoa hồng"],text:"Mối quan hệ giữa Hoàng tử bé và bông hồng giúp chúng ta suy nghĩ về sự quan tâm và trách nhiệm. Điều đặc biệt không chỉ nằm ở vẻ ngoài, mà còn ở thời gian và tình cảm ta dành cho nhau."},
+      {keys:["đố","câu hỏi"],text:"Câu đố nhỏ: Điều gì giúp tình bạn lớn lên? A. Chỉ gặp nhau một lần. B. Sự quan tâm và thời gian. C. Cạnh tranh để hơn thua. Em chọn đáp án nào?"}
+    ],
+    fallback:"Đó là một câu hỏi đáng suy ngẫm. Em thử kể một ví dụ trong đời sống cho thấy sự quan tâm có thể làm cho một mối quan hệ trở nên đặc biệt nhé."
+  }
+};
+const quizData = {
+ deman:[
+  {q:"Bài học quan trọng Dế Mèn nhận ra sau những sai lầm của mình là gì?",a:["Luôn chứng minh mình mạnh hơn người khác.","Suy nghĩ về hậu quả hành động và biết quan tâm đến người khác.","Tránh kết bạn với người yếu hơn mình.","Không bao giờ rời khỏi nơi mình sinh sống."],correct:1,why:"Chính xác! Câu chuyện nhắc chúng ta suy nghĩ trước khi hành động và có trách nhiệm với người khác."},
+  {q:"Điều gì góp phần dẫn đến bi kịch của Dế Choắt?",a:["Dế Mèn trêu chị Cốc rồi gây ra hậu quả.","Dế Choắt muốn đi du lịch.","Hai bạn bị lạc trong rừng.","Dế Mèn quên đường về nhà."],correct:0,why:"Đúng rồi! Hành động trêu chọc thiếu suy nghĩ của Dế Mèn đã gây ra hậu quả nghiêm trọng."},
+  {q:"Sau khi gây ra hậu quả, Dế Mèn có cảm xúc nào?",a:["Tự hào vì mình chiến thắng.","Không quan tâm đến ai.","Ân hận và suy ngẫm về hành động của mình.","Vui vẻ như chưa có chuyện gì."],correct:2,why:"Đúng! Sự ân hận là bước đầu để Dế Mèn nhìn lại bản thân và trưởng thành."},
+  {q:"Nếu thấy bạn bị trêu chọc, em nên làm gì?",a:["Cười theo để hòa nhập.","Bình tĩnh hỗ trợ bạn và tìm người lớn đáng tin cậy nếu cần.","Quay đi vì không liên quan.","Đăng câu chuyện lên mạng."],correct:1,why:"Rất tốt! Hãy bảo vệ bạn một cách an toàn và tìm sự hỗ trợ khi cần."},
+  {q:"Thông điệp nào phù hợp nhất với hành trình trưởng thành của Dế Mèn?",a:["Không bao giờ thừa nhận lỗi.","Sức mạnh là điều quan trọng nhất.","Sai lầm có thể giúp ta trưởng thành nếu biết nhận lỗi và thay đổi.","Người mạnh không cần bạn bè."],correct:2,why:"Tuyệt vời! Nhận lỗi, suy ngẫm và thay đổi giúp chúng ta trưởng thành hơn."}
+ ],
+ tam:[
+  {q:"Tấm thường được khắc họa là người như thế nào?",a:["Nhân hậu và chịu khó.","Luôn muốn làm tổn thương mọi người.","Không bao giờ giúp ai.","Thờ ơ với mọi việc."],correct:0,why:"Đúng! Tấm thường được khắc họa là người hiền lành, chăm chỉ và nhân hậu."},
+  {q:"Khi gặp khó khăn, điều gì có thể giúp chúng ta?",a:["Bình tĩnh tìm giải pháp và nhờ giúp đỡ khi cần.","Giấu mọi chuyện mãi mãi.","Lập tức bỏ cuộc.","Đổ lỗi cho người khác."],correct:0,why:"Chính xác! Kiên trì và tìm sự hỗ trợ phù hợp là cách ứng xử tích cực."},
+  {q:"Truyện cổ tích thường dùng yếu tố kỳ ảo để làm gì?",a:["Làm câu chuyện khó hiểu hơn.","Tạo sức hấp dẫn và thể hiện ước mơ, quan niệm của người xưa.","Thay thế tất cả nhân vật.","Không có mục đích nào."],correct:1,why:"Đúng! Yếu tố kỳ ảo tạo sức hấp dẫn và góp phần thể hiện ước mơ, niềm tin."},
+  {q:"Khi xảy ra mâu thuẫn với bạn, em nên làm gì trước tiên?",a:["Bình tĩnh lắng nghe và trao đổi tôn trọng.","Lập tức đăng bài trách móc.","Không cho ai giải thích.","Cố làm bạn xấu hổ."],correct:0,why:"Rất tốt! Lắng nghe và trao đổi bình tĩnh giúp giải quyết mâu thuẫn tốt hơn."},
+  {q:"Khi đọc truyện, cách nào giúp hiểu nhân vật sâu hơn?",a:["Chỉ đọc tên truyện.","Bỏ qua hành động của nhân vật.","Quan sát lời nói, hành động, cảm xúc và hậu quả lựa chọn.","Chỉ xem trang cuối."],correct:2,why:"Chính xác! Hành động, lời nói và lựa chọn giúp ta hiểu nhân vật."}
+ ],
+ hoangtu:[
+  {q:"Trong câu chuyện, điều gì giúp một mối quan hệ trở nên đặc biệt?",a:["Chỉ vẻ ngoài.","Thời gian, sự quan tâm và gắn bó.","Việc luôn cạnh tranh.","Không cần trò chuyện."],correct:1,why:"Đúng! Sự gắn bó và quan tâm làm cho mối quan hệ có ý nghĩa."},
+  {q:"Cáo giúp Hoàng tử bé suy ngẫm chủ yếu về điều gì?",a:["Cách xây nhà.","Tình bạn, sự gắn bó và trách nhiệm.","Cách thắng một cuộc đua.","Việc mua sắm."],correct:1,why:"Chính xác! Cuộc gặp với Cáo gợi mở nhiều suy nghĩ về tình bạn và trách nhiệm."},
+  {q:"Điều gì giúp chúng ta hiểu một người bạn?",a:["Dành thời gian lắng nghe và tìm hiểu bạn.","Chỉ nhìn vẻ ngoài.","Đoán mà không hỏi.","So sánh bạn với tất cả mọi người."],correct:0,why:"Rất tốt! Lắng nghe và dành thời gian giúp chúng ta hiểu nhau hơn."},
+  {q:"Nếu bạn đang buồn, em có thể làm gì?",a:["Chế giễu bạn.","Lắng nghe và hỏi xem bạn có cần giúp đỡ không.","Kể chuyện riêng của bạn cho mọi người.","Bắt bạn phải vui ngay."],correct:1,why:"Đúng! Sự quan tâm chân thành có thể giúp người khác cảm thấy được thấu hiểu."},
+  {q:"Một bài học khi đọc Hoàng tử bé là gì?",a:["Chỉ những điều nhìn thấy mới có ý nghĩa.","Không cần chịu trách nhiệm với ai.","Hãy biết trân trọng những mối quan hệ và điều mình quan tâm.","Không nên đặt câu hỏi."],correct:2,why:"Tuyệt vời! Câu chuyện khuyến khích ta suy ngẫm về điều có ý nghĩa trong cuộc sống."}
+ ]
+};
+let currentCharacter="deman", questionIndex=0, quizScore=0, answered=false, totalPoints=120, completedChallenges=3, badges=2;
+let studentName=localStorage.getItem("skylineStudentName")||"Bạn đọc Sky-Line";
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");}
+function updateProfile(){document.getElementById("leaderName").textContent=studentName;document.getElementById("leaderPoints").textContent=totalPoints+" điểm";document.getElementById("pointsStat").textContent=totalPoints;document.getElementById("badgeStat").textContent=badges;document.getElementById("challengeStat").textContent=completedChallenges;}
+function addBubble(text,who){const div=document.createElement("div");div.className="bubble "+who;div.textContent=text;document.getElementById("chatMessages").appendChild(div);document.getElementById("chatMessages").scrollTop=999999;}
+function setCharacter(id){chatHistory=[];currentCharacter=id;document.querySelectorAll(".character").forEach(el=>el.classList.toggle("active",el.dataset.character===id));document.getElementById("chatTitle").textContent=characters[id].title;document.getElementById("chatMessages").innerHTML="";addBubble(characters[id].greeting,"bot");}
+document.querySelectorAll(".character").forEach(el=>{el.querySelector("button").addEventListener("click",()=>setCharacter(el.dataset.character));el.addEventListener("click",e=>{if(e.target.tagName!=="BUTTON")setCharacter(el.dataset.character);});});
+function replyTo(message){const lower=message.toLowerCase();const data=characters[currentCharacter];const found=data.replies.find(r=>r.keys.some(k=>lower.includes(k)));setTimeout(()=>addBubble(found?found.text:data.fallback,"bot"),350);}
+let chatHistory = [];
+async function sendChatMessage(text){
+  addBubble(text,"user");
+  chatHistory.push({role:"user", content:text});
+  const status = document.getElementById("aiStatus");
+  status.textContent = "● Đang kết nối AI…";
+  try {
+    const response = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:text, character:currentCharacter, history:chatHistory.slice(-10)})
+    });
+    if(!response.ok) throw new Error("API chưa sẵn sàng");
+    const data = await response.json();
+    if(!data.reply) throw new Error("Chưa nhận được phản hồi");
+    addBubble(data.reply,"bot");
+    chatHistory.push({role:"assistant",content:data.reply});
+    status.textContent = "● AI đã kết nối";
+    status.style.color = "#168565";
+  } catch(err) {
+    status.textContent = "● Chế độ bản mẫu";
+    status.style.color = "#7b87a0";
+    replyTo(text);
+  }
+}
+document.getElementById("chatForm").addEventListener("submit",e=>{e.preventDefault();const input=document.getElementById("chatInput");const text=input.value.trim();if(!text)return;input.value="";sendChatMessage(text);});
+document.querySelectorAll(".quick-prompts button").forEach(btn=>btn.addEventListener("click",()=>{sendChatMessage(btn.dataset.prompt);}));
+document.getElementById("resetChat").addEventListener("click",()=>setCharacter(currentCharacter));
+function loadQuestion(){const book=document.getElementById("bookSelect").value;const questions=quizData[book];const item=questions[questionIndex];answered=false;document.getElementById("questionCount").textContent=`Câu hỏi ${questionIndex+1}/5 · Mức độ: ${questionIndex<2?"Cơ bản": "Vận dụng"}`;document.getElementById("questionText").textContent=item.q;document.getElementById("scoreText").textContent="Điểm bài này: "+quizScore;document.getElementById("feedback").className="feedback";document.getElementById("feedback").textContent="";document.getElementById("nextQuestion").disabled=true;document.getElementById("nextQuestion").textContent=questionIndex===4?"Hoàn thành thử thách ✓":"Câu tiếp theo →";const answers=document.getElementById("answers");answers.innerHTML="";item.a.forEach((ans,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+". "+ans;b.addEventListener("click",()=>chooseAnswer(i,b));answers.appendChild(b);});}
+function chooseAnswer(i,button){if(answered)return;answered=true;const book=document.getElementById("bookSelect").value;const item=quizData[book][questionIndex];document.querySelectorAll(".answer").forEach((b,idx)=>{b.disabled=true;if(idx===item.correct)b.classList.add("correct");});const feedback=document.getElementById("feedback");if(i===item.correct){quizScore+=10;button.classList.add("correct");feedback.textContent="🌟 "+item.why;}else{button.classList.add("wrong");feedback.textContent="💛 Chưa đúng lần này, nhưng em đang học hỏi! "+item.why;}feedback.classList.add("show");document.getElementById("scoreText").textContent="Điểm bài này: "+quizScore;document.getElementById("nextQuestion").disabled=false;}
+document.getElementById("bookSelect").addEventListener("change",()=>{questionIndex=0;quizScore=0;loadQuestion();});
+document.getElementById("nextQuestion").addEventListener("click",()=>{if(!answered)return;if(questionIndex<4){questionIndex++;loadQuestion();}else{totalPoints+=quizScore;completedChallenges++;if(quizScore>=40)badges++;updateProfile();toast(`Hoàn thành thử thách! Em nhận ${quizScore} điểm. Cố gắng tuyệt vời!`);questionIndex=0;quizScore=0;loadQuestion();}});
+document.getElementById("reflectionText").addEventListener("input",e=>document.getElementById("reflectionCount").textContent=e.target.value.length+" ký tự");
+document.getElementById("submitReflection").addEventListener("click",()=>{const value=document.getElementById("reflectionText").value.trim();if(value.length<15){toast("Em hãy viết thêm một chút cảm nhận nhé!");return;}totalPoints+=5;updateProfile();document.getElementById("reflectionText").value="";document.getElementById("reflectionCount").textContent="0 ký tự";toast("Cảm ơn em đã chia sẻ! +5 điểm đọc sách ✨");});
+const modal=document.getElementById("profileModal");
+document.getElementById("profileBtn").addEventListener("click",()=>{document.getElementById("studentNameInput").value=studentName==="Bạn đọc Sky-Line"?"":studentName;modal.classList.add("show");});
+document.getElementById("closeModal").addEventListener("click",()=>modal.classList.remove("show"));
+document.getElementById("saveName").addEventListener("click",()=>{const value=document.getElementById("studentNameInput").value.trim();if(!value){toast("Em hãy nhập tên hoặc biệt danh nhé.");return;}studentName=value;localStorage.setItem("skylineStudentName",studentName);updateProfile();modal.classList.remove("show");toast("Xin chào "+studentName+"! Chúc em đọc sách vui vẻ.");});
+
+const REQUESTS_KEY = "skylineBookRequests";
+function getLocalRequests(){try{return JSON.parse(localStorage.getItem(REQUESTS_KEY)||"[]")}catch(e){return []}}
+function escapeHtml(value){return String(value||"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+function renderBookRequests(items){
+ const list=document.getElementById("bookRequestList");
+ if(!items.length){list.innerHTML='<p style="font-size:12px;color:#72809a">Chưa có đề xuất nào được lưu trên thiết bị này.</p>';return;}
+ list.innerHTML=items.slice(0,8).map(item=>`<div style="border:1px solid #e7ecf5;border-radius:12px;padding:11px 12px;background:#fbfcff"><div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><b style="font-size:13px">${escapeHtml(item.title)}</b><span style="font-size:10px;color:#5c65bb;background:#eef0ff;border-radius:99px;padding:5px 7px">${escapeHtml(item.grade||"")}</span></div><div style="font-size:11px;color:#72809a;margin-top:4px">${escapeHtml(item.author||"Chưa rõ tác giả")} · ${escapeHtml(item.genre||"")}</div>${item.reason?`<p style="font-size:12px;line-height:1.5;color:#56647e;margin:7px 0 0">${escapeHtml(item.reason)}</p>`:""}<div style="font-size:10px;color:#9aa3b5;margin-top:6px">Đề xuất từ ${escapeHtml(item.student||"Bạn đọc Sky-Line")} · ${escapeHtml(item.date||"Vừa gửi")}</div></div>`).join("");
+}
+async function refreshBookRequests(){
+ try{
+   const res=await fetch("/api/book-requests");
+   if(!res.ok) throw new Error("local");
+   const data=await res.json();
+   renderBookRequests(data.requests||[]);
+ }catch(e){renderBookRequests(getLocalRequests());}
+}
+document.getElementById("refreshRequests").addEventListener("click",refreshBookRequests);
+document.getElementById("bookRequestForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const title=document.getElementById("requestedTitle").value.trim();
+ if(!title){toast("Em hãy nhập tên sách nhé.");return;}
+ const request={title,author:document.getElementById("requestedAuthor").value.trim(),grade:document.getElementById("requestedGrade").value,genre:document.getElementById("requestedGenre").value,reason:document.getElementById("requestedReason").value.trim(),student:studentName,date:new Date().toLocaleDateString("vi-VN")};
+ const status=document.getElementById("requestStatus");
+ try{
+   const res=await fetch("/api/book-requests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(request)});
+   if(!res.ok) throw new Error("server unavailable");
+   const data=await res.json();
+   status.textContent="Đã gửi đề xuất đến danh sách chung của thư viện.";
+   toast("Đã gửi đề xuất sách đến thư viện! 📚");
+   if(data.requests) renderBookRequests(data.requests);
+   else await refreshBookRequests();
+ }catch(err){
+   const all=getLocalRequests();all.unshift(request);localStorage.setItem(REQUESTS_KEY,JSON.stringify(all));
+   renderBookRequests(all);
+   status.textContent="Đã lưu trên thiết bị này. Muốn gửi danh sách chung, hãy chạy website qua máy chủ.";
+   toast("Đã lưu đề xuất trên thiết bị này.");
+ }
+ e.target.reset();
+});
+refreshBookRequests();
+
+updateProfile();loadQuestion();
+</script>
+</body>
+</html>
